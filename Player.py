@@ -18,7 +18,7 @@ class Player(pygame.sprite.Sprite):
         img = pygame.image.load(os.path.join('sprites', 'green-tank.png')).convert()
         self.images.append(img)
         self.size = self.images[0].get_size()
-        self.image = pygame.transform.scale(self.images[0], (60, 60))
+        self.image = pygame.transform.scale(self.images[0], (50, 50))
         self.rect = self.image.get_rect()
 
     """
@@ -35,9 +35,10 @@ class Player(pygame.sprite.Sprite):
 
     def update(self):
         self.rect.x += self.move_x
-        self.rect.y += self.move_y
+        if self.move_x == 0:
+            self.rect.y += self.move_y
 
-        self.rect.x = min(720, self.rect.x)
+        self.rect.x = min(780 - self.image.get_size()[0], self.rect.x)
         self.rect.x = max(0, self.rect.x)
-        self.rect.y = min(720, self.rect.y)
+        self.rect.y = min(780 - self.image.get_size()[1], self.rect.y)
         self.rect.y = max(0, self.rect.y)
