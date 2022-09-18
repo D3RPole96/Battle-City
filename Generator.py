@@ -21,7 +21,6 @@ class Generator:
                 block.rect.x = 30 * quarter_index
                 block.rect.y = 30 * line_index
                 self.obstacles.append(block)
-        a = 1
 
     def get_obstacles_dictionary(self):
         dict = {}

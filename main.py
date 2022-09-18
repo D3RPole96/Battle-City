@@ -14,14 +14,14 @@ class Game:
         self.clock = pygame.time.Clock()
         self.fps = 60
 
-        generator = Generator.Generator(1)
+        self.generator = Generator.Generator(1)
         self.player = Player.Player()  # spawn player
         self.player.rect.x = 0  # go to x
         self.player.rect.y = 0  # go to y
         self.player_speed = 2 * (60 / self.fps)
         self.draw_list = pygame.sprite.Group()
         self.draw_list.add(self.player)
-        for obstacle in generator.obstacles:
+        for obstacle in self.generator.obstacles:
             self.draw_list.add(obstacle)
 
         self.start_cycle()
@@ -35,23 +35,23 @@ class Game:
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_UP or event.key == ord('w'):
-                        self.player.control(0, -self.player_speed)
+                        self.player.control(self.player.move_x, -self.player_speed)
                     if event.key == pygame.K_DOWN or event.key == ord('s'):
-                        self.player.control(0, self.player_speed)
+                        self.player.control(self.player.move_x, self.player_speed)
                     if event.key == pygame.K_LEFT or event.key == ord('a'):
-                        self.player.control(-self.player_speed, 0)
+                        self.player.control(-self.player_speed, self.player.move_y)
                     if event.key == pygame.K_RIGHT or event.key == ord('d'):
-                        self.player.control(self.player_speed, 0)
+                        self.player.control(self.player_speed, self.player.move_y)
 
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_UP or event.key == ord('w'):
-                        self.player.control(0, self.player_speed)
+                        self.player.control(self.player.move_x, 0)
                     if event.key == pygame.K_DOWN or event.key == ord('s'):
-                        self.player.control(0, -self.player_speed)
+                        self.player.control(self.player.move_x, 0)
                     if event.key == pygame.K_LEFT or event.key == ord('a'):
-                        self.player.control(self.player_speed, 0)
+                        self.player.control(0, self.player.move_y)
                     if event.key == pygame.K_RIGHT or event.key == ord('d'):
-                        self.player.control(-self.player_speed, 0)
+                        self.player.control(0, self.player.move_y)
                     if event.key == ord('q'):
                         running = False
 
@@ -59,7 +59,7 @@ class Game:
             self.draw_list.draw(self.screen)
             pygame.display.flip()
             self.clock.tick(self.fps)
-            self.player.update()
+            self.player.update(self.generator.obstacles)
             print(self.player.rect.x, self.player.rect.y, sep=' ')
 
     pygame.quit()

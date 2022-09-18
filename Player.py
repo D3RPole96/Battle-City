@@ -1,5 +1,6 @@
 import os
 import pygame
+import Generator
 
 
 class Player(pygame.sprite.Sprite):
@@ -26,19 +27,35 @@ class Player(pygame.sprite.Sprite):
     """
 
     def control(self, x, y):
-        self.move_x += x
-        self.move_y += y
+        self.move_x = x
+        self.move_y = y
 
     """
     Update sprite position
     """
 
-    def update(self):
-        self.rect.x += self.move_x
-        if self.move_x == 0:
-            self.rect.y += self.move_y
+    def update(self, obstacles):
+        prev_x, prev_y = self.rect.x, self.rect.y
+        self.move_player()
 
         self.rect.x = min(780 - self.image.get_size()[0], self.rect.x)
         self.rect.x = max(0, self.rect.x)
         self.rect.y = min(780 - self.image.get_size()[1], self.rect.y)
         self.rect.y = max(0, self.rect.y)
+
+        for obstacle in obstacles:
+            if self.rect.colliderect(obstacle.rect) and obstacle.collision_type == 1:
+                self.rect.x = prev_x
+                self.rect.y = prev_y
+                prev_move, self.move_x = self.move_x, 0
+                self.move_player()
+                self.move_x = prev_move
+                if self.rect.colliderect(obstacle.rect) and obstacle.collision_type == 1:
+                    self.rect.x = prev_x
+                    self.rect.y = prev_y
+                break
+
+    def move_player(self):
+        self.rect.x += self.move_x
+        if self.move_x == 0:
+            self.rect.y += self.move_y
