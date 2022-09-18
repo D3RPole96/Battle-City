@@ -2,10 +2,11 @@ from collections import defaultdict
 
 import pygame
 import Player
+import Generator
 
 
 class Game:
-    def __init__(self):
+    def __init__(self, level):
         self.screen = pygame.display.set_mode([780, 780])
         self.surface = pygame.Surface((780, 780))
         self.surface.fill((0, 0, 0))
@@ -13,12 +14,15 @@ class Game:
         self.clock = pygame.time.Clock()
         self.fps = 60
 
+        generator = Generator.Generator(1)
         self.player = Player.Player()  # spawn player
         self.player.rect.x = 0  # go to x
         self.player.rect.y = 0  # go to y
         self.player_speed = 2 * (60 / self.fps)
-        self.player_list = pygame.sprite.Group()
-        self.player_list.add(self.player)
+        self.draw_list = pygame.sprite.Group()
+        self.draw_list.add(self.player)
+        for obstacle in generator.obstacles:
+            self.draw_list.add(obstacle)
 
         self.start_cycle()
 
@@ -52,7 +56,7 @@ class Game:
                         running = False
 
             self.screen.blit(self.surface, self.surfacebox)
-            self.player_list.draw(self.screen)
+            self.draw_list.draw(self.screen)
             pygame.display.flip()
             self.clock.tick(self.fps)
             self.player.update()
@@ -63,4 +67,4 @@ class Game:
 
 pygame.init()
 
-game = Game()
+game = Game(0)
