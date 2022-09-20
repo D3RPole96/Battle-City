@@ -1,5 +1,5 @@
 import os
-import Brick
+import Obstacle
 import GameObjects
 
 
@@ -21,6 +21,6 @@ class Generator:
 
     def get_obstacles_dictionary(self):
         dict = {}
-        dict['B'] = Brick.Brick
+        dict['B'] = Obstacle.Brick
 
         return dict

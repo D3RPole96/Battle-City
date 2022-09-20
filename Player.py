@@ -1,41 +1,38 @@
+import enum
 import os
 import pygame
-import Generator
+
+import Bullet
+import Direction
+import GameObjects
 
 
 class Player(pygame.sprite.Sprite):
-    """
-    Spawn a player
-    """
-
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.images = []
 
-        self.move_x = 0  # move along X
-        self.move_y = 0  # move along Y
-        self.frame = 0  # count frames
+        self.move_x = 0
+        self.move_y = 0
+        self.frame = 0
         self.previous_x, self.previous_y = 0, 0
+        self.direction = Direction.Direction.up
 
         self.collision_type = 1
 
-        img = pygame.image.load(os.path.join('sprites', 'green-tank.png')).convert()
-        self.images.append(img)
+        for i in Direction.Direction:
+            img = pygame.image.load(os.path.join('sprites/Tanks', f'green-tank-{i.name}.png')).convert()
+            self.images.append(img)
+
         self.size = self.images[0].get_size()
         self.image = pygame.transform.scale(self.images[0], (50, 50))
         self.rect = self.image.get_rect()
 
-    """
-    Control player movement
-    """
+        GameObjects.GameObjects.instance.set_player(self)
 
     def control(self, x, y):
         self.move_x = x
         self.move_y = y
-
-    """
-    Update sprite position
-    """
 
     def update(self):
         self.previous_x, self.previous_y = self.rect.x, self.rect.y
@@ -65,5 +62,29 @@ class Player(pygame.sprite.Sprite):
         if self.move_x == 0:
             self.rect.y += self.move_y
 
+        self.set_direction()
+
+    def set_direction(self):
+        if self.rect.x - self.previous_x > 0:
+            self.direction = Direction.Direction.right
+        if self.rect.x - self.previous_x < 0:
+            self.direction = Direction.Direction.left
+        if self.rect.y - self.previous_y > 0:
+            self.direction = Direction.Direction.down
+        if self.rect.y - self.previous_y < 0:
+            self.direction = Direction.Direction.up
+
+        self.image = pygame.transform.scale(self.images[self.direction.value], (50, 50))
+
     def undo_move(self):
         self.rect.x, self.rect.y = self.previous_x, self.previous_y
+
+    def shoot(self):
+        if self.direction == Direction.Direction.up:
+            Bullet.Bullet(self.rect.x + 20, self.rect.y - 21, self.direction)
+        if self.direction == Direction.Direction.right:
+            Bullet.Bullet(self.rect.x + 51, self.rect.y + 20, self.direction)
+        if self.direction == Direction.Direction.down:
+            Bullet.Bullet(self.rect.x + 20, self.rect.y + 51, self.direction)
+        if self.direction == Direction.Direction.left:
+            Bullet.Bullet(self.rect.x - 21, self.rect.y + 20, self.direction)
