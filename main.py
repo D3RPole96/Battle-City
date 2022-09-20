@@ -3,10 +3,13 @@ from collections import defaultdict
 import pygame
 import Player
 import Generator
+import GameObjects
 
 
 class Game:
     def __init__(self, level):
+        self.game_objects = GameObjects.GameObjects.instance = GameObjects.GameObjects()
+
         self.screen = pygame.display.set_mode([780, 780])
         self.surface = pygame.Surface((780, 780))
         self.surface.fill((0, 0, 0))
@@ -15,13 +18,16 @@ class Game:
         self.fps = 60
 
         self.generator = Generator.Generator(1)
+
         self.player = Player.Player()  # spawn player
         self.player.rect.x = 0  # go to x
         self.player.rect.y = 0  # go to y
         self.player_speed = 2 * (60 / self.fps)
+        self.game_objects.set_player(self.player)
+
         self.draw_list = pygame.sprite.Group()
         self.draw_list.add(self.player)
-        for obstacle in self.generator.obstacles:
+        for obstacle in self.game_objects.get_all_objects():
             self.draw_list.add(obstacle)
 
         self.start_cycle()
@@ -59,7 +65,8 @@ class Game:
             self.draw_list.draw(self.screen)
             pygame.display.flip()
             self.clock.tick(self.fps)
-            self.player.update(self.generator.obstacles)
+            self.player.update()
+            self.game_objects.check_for_collision()
             print(self.player.rect.x, self.player.rect.y, sep=' ')
 
     pygame.quit()

@@ -15,6 +15,9 @@ class Player(pygame.sprite.Sprite):
         self.move_x = 0  # move along X
         self.move_y = 0  # move along Y
         self.frame = 0  # count frames
+        self.previous_x, self.previous_y = 0, 0
+
+        self.collision_type = 1
 
         img = pygame.image.load(os.path.join('sprites', 'green-tank.png')).convert()
         self.images.append(img)
@@ -34,8 +37,8 @@ class Player(pygame.sprite.Sprite):
     Update sprite position
     """
 
-    def update(self, obstacles):
-        prev_x, prev_y = self.rect.x, self.rect.y
+    def update(self):
+        self.previous_x, self.previous_y = self.rect.x, self.rect.y
         self.move_player()
 
         self.rect.x = min(780 - self.image.get_size()[0], self.rect.x)
@@ -43,19 +46,24 @@ class Player(pygame.sprite.Sprite):
         self.rect.y = min(780 - self.image.get_size()[1], self.rect.y)
         self.rect.y = max(0, self.rect.y)
 
+        '''
         for obstacle in obstacles:
             if self.rect.colliderect(obstacle.rect) and obstacle.collision_type == 1:
-                self.rect.x = prev_x
-                self.rect.y = prev_y
+                self.rect.x = self.previous_x
+                self.rect.y = self.previous_y
                 prev_move, self.move_x = self.move_x, 0
                 self.move_player()
                 self.move_x = prev_move
                 if self.rect.colliderect(obstacle.rect) and obstacle.collision_type == 1:
-                    self.rect.x = prev_x
-                    self.rect.y = prev_y
+                    self.rect.x = self.previous_x
+                    self.rect.y = self.previous_y
                 break
+        '''
 
     def move_player(self):
         self.rect.x += self.move_x
         if self.move_x == 0:
             self.rect.y += self.move_y
+
+    def undo_move(self):
+        self.rect.x, self.rect.y = self.previous_x, self.previous_y
