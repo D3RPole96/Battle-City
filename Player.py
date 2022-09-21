@@ -4,6 +4,7 @@ import pygame
 
 import Bullet
 import Direction
+import GameSettings
 import GameObjects
 
 
@@ -17,6 +18,7 @@ class Player(pygame.sprite.Sprite):
         self.frame = 0
         self.previous_x, self.previous_y = 0, 0
         self.direction = Direction.Direction.up
+        self.reload_time = 0
 
         self.collision_type = 1
 
@@ -25,8 +27,10 @@ class Player(pygame.sprite.Sprite):
             self.images.append(img)
 
         self.size = self.images[0].get_size()
-        self.image = pygame.transform.scale(self.images[0], (50, 50))
+        self.image = pygame.transform.scale(self.images[0], (GameSettings.change_for_screen_width(50),
+                                                             GameSettings.change_for_screen_height(50)))
         self.rect = self.image.get_rect()
+        self.image.set_colorkey((0, 0, 0))
 
         GameObjects.GameObjects.instance.set_player(self)
 
@@ -42,6 +46,9 @@ class Player(pygame.sprite.Sprite):
         self.rect.x = max(0, self.rect.x)
         self.rect.y = min(780 - self.image.get_size()[1], self.rect.y)
         self.rect.y = max(0, self.rect.y)
+
+        self.reload_time -= 1
+        self.reload_time = max(0, self.reload_time)
 
         '''
         for obstacle in obstacles:
@@ -80,6 +87,8 @@ class Player(pygame.sprite.Sprite):
         self.rect.x, self.rect.y = self.previous_x, self.previous_y
 
     def shoot(self):
+        if self.reload_time > 0:
+            return
         if self.direction == Direction.Direction.up:
             Bullet.Bullet(self.rect.x + 20, self.rect.y - 21, self.direction)
         if self.direction == Direction.Direction.right:
@@ -88,3 +97,4 @@ class Player(pygame.sprite.Sprite):
             Bullet.Bullet(self.rect.x + 20, self.rect.y + 51, self.direction)
         if self.direction == Direction.Direction.left:
             Bullet.Bullet(self.rect.x - 21, self.rect.y + 20, self.direction)
+        self.reload_time = GameSettings.GameSettings.fps * 2

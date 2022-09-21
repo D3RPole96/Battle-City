@@ -4,18 +4,22 @@ import pygame
 import Player
 import Generator
 import GameObjects
+import GameSettings
 
 
 class Game:
     def __init__(self, level):
+        self.fps = GameSettings.GameSettings.fps
+        self.screen_width = GameSettings.GameSettings.screen_width
+        self.screen_height = GameSettings.GameSettings.screen_height
+
         self.game_objects = GameObjects.GameObjects.instance = GameObjects.GameObjects()
 
-        self.screen = pygame.display.set_mode([780, 780])
-        self.surface = pygame.Surface((780, 780))
+        self.screen = pygame.display.set_mode([self.screen_width, self.screen_height])
+        self.surface = pygame.Surface((self.screen_width, self.screen_height))
         self.surface.fill((0, 0, 0))
-        self.surfacebox = self.screen.get_rect()
+        self.surface_box = self.screen.get_rect()
         self.clock = pygame.time.Clock()
-        self.fps = 60
 
         self.generator = Generator.Generator(1)
 
@@ -57,13 +61,14 @@ class Game:
                     if event.key == ord('q'):
                         running = False
 
-            self.screen.blit(self.surface, self.surfacebox)
+            self.screen.blit(self.surface, self.surface_box)
             self.game_objects.sprite_group.draw(self.screen)
             pygame.display.flip()
             self.clock.tick(self.fps)
             self.player.update()
+
             self.game_objects.check_for_collision()
-            print(self.player.rect.x, self.player.rect.y, sep=' ')
+            self.game_objects.move_bullets()
 
     pygame.quit()
 
