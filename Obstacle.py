@@ -1,6 +1,7 @@
 import os
 import pygame
 
+import Direction
 import GameObjects
 
 
@@ -49,8 +50,12 @@ class Brick(pygame.sprite.Sprite):
                                                 (self.image.get_width(), self.image.get_width()))
 
     def collider_with_bullet(self, bullet):
-        bullet_rect = [bullet.rect.x, bullet.rect.y,
-                       bullet.rect.x + bullet.rect.width, bullet.rect.y + bullet.rect.height]
+        if bullet.direction == Direction.Direction.up or bullet.direction == Direction.Direction.down:
+            bullet_rect = [bullet.rect.x - 2 * bullet.level, bullet.rect.y,
+                           bullet.rect.x + bullet.rect.width + 2 * bullet.level, bullet.rect.y + bullet.rect.height]
+        else:
+            bullet_rect = [bullet.rect.x, bullet.rect.y - 2 * bullet.level,
+                           bullet.rect.x + bullet.rect.width, bullet.rect.y + bullet.rect.height + 2 * bullet.level]
 
         self.top_left_brick_rect = [self.rect.x, self.rect.y,
                                     self.rect.x + self.rect.width / 2, self.rect.y + self.rect.height / 2]
@@ -86,9 +91,9 @@ class Brick(pygame.sprite.Sprite):
                 did_bullet_hit = True
             self.obstacle_state[3] = 0
 
-        if did_bullet_hit:
-            bullet.destroy_bullet()
-            self.update_sprite()
+        self.update_sprite()
+
+        return did_bullet_hit
 
     def destroy_brick(self):
         GameObjects.GameObjects.instance.static_objects.remove(self)

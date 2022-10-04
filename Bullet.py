@@ -8,10 +8,11 @@ import Direction
 
 
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self, x, y, direction, is_bullet_friendly):
+    def __init__(self, x, y, direction, is_bullet_friendly, bullet_level):
         pygame.sprite.Sprite.__init__(self)
 
-        self.bullet_speed = GameSettings.change_for_fps(4)
+        self.bullet_speed = GameSettings.change_for_fps(bullet_level * 5)
+        self.level = bullet_level
 
         self.move_x = 0
         self.move_y = 0

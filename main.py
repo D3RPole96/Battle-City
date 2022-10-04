@@ -75,4 +75,4 @@ class Game:
 
 pygame.init()
 
-game = Game('test')
+game = Game('1')

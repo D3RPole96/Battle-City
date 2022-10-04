@@ -38,10 +38,15 @@ class GameObjects:
                 if dynamic_object.rect.colliderect(game_object.rect) and game_object.collision_type == 2:
                     dynamic_object.collider_with_bullet(game_object)
 
-        for static_object in self.static_objects:
-            for bullet in self.bullets:
+        did_bullet_hit = False
+        current_bullet = None
+        for bullet in self.bullets:
+            for static_object in self.static_objects:
                 if static_object.rect.colliderect(bullet.rect):
-                    static_object.collider_with_bullet(bullet)
+                    did_bullet_hit = static_object.collider_with_bullet(bullet)
+            if did_bullet_hit:
+                bullet.destroy_bullet()
+            did_bullet_hit = False
 
     def move_bullets(self):
         for bullet in self.bullets:
