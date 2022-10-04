@@ -8,7 +8,7 @@ import Direction
 
 
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self, x, y, direction):
+    def __init__(self, x, y, direction, is_bullet_friendly):
         pygame.sprite.Sprite.__init__(self)
 
         self.bullet_speed = GameSettings.change_for_fps(4)
@@ -36,6 +36,8 @@ class Bullet(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
+        self.is_bullet_friendly = is_bullet_friendly
+
         GameObjects.GameObjects.instance.add_bullet(self)
 
     def move_bullet(self):
@@ -58,4 +60,5 @@ class Bullet(pygame.sprite.Sprite):
         return False
 
     def destroy_bullet(self):
+        GameObjects.GameObjects.instance.bullets.remove(self)
         self.kill()

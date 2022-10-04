@@ -35,9 +35,15 @@ class GameObjects:
                     continue
                 if dynamic_object.rect.colliderect(game_object.rect) and game_object.collision_type == 1:
                     dynamic_object.undo_move()
+                if dynamic_object.rect.colliderect(game_object.rect) and game_object.collision_type == 2:
+                    dynamic_object.collider_with_bullet(game_object)
+
+        for static_object in self.static_objects:
+            for bullet in self.bullets:
+                if static_object.rect.colliderect(bullet.rect):
+                    static_object.collider_with_bullet(bullet)
 
     def move_bullets(self):
         for bullet in self.bullets:
             bullet.move_bullet()
-            if bullet.is_bullet_behind_screen():
-                self.bullets.remove(bullet)
+            bullet.is_bullet_behind_screen()

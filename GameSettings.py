@@ -11,6 +11,6 @@ def change_for_screen_height(number):
 
 
 class GameSettings:
-    screen_width = 490
+    screen_width = 780
     screen_height = 780
     fps = 60

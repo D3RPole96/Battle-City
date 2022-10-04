@@ -21,7 +21,7 @@ class Game:
         self.surface_box = self.screen.get_rect()
         self.clock = pygame.time.Clock()
 
-        self.generator = Generator.Generator(1)
+        self.generator = Generator.Generator(level)
 
         self.player = Player.Player()
         self.player.rect.x = 0
@@ -75,4 +75,4 @@ class Game:
 
 pygame.init()
 
-game = Game(0)
+game = Game('test')

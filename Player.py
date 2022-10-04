@@ -50,20 +50,6 @@ class Player(pygame.sprite.Sprite):
         self.reload_time -= 1
         self.reload_time = max(0, self.reload_time)
 
-        '''
-        for obstacle in obstacles:
-            if self.rect.colliderect(obstacle.rect) and obstacle.collision_type == 1:
-                self.rect.x = self.previous_x
-                self.rect.y = self.previous_y
-                prev_move, self.move_x = self.move_x, 0
-                self.move_player()
-                self.move_x = prev_move
-                if self.rect.colliderect(obstacle.rect) and obstacle.collision_type == 1:
-                    self.rect.x = self.previous_x
-                    self.rect.y = self.previous_y
-                break
-        '''
-
     def move_player(self):
         self.rect.x += self.move_x
         if self.move_x == 0:
@@ -90,11 +76,15 @@ class Player(pygame.sprite.Sprite):
         if self.reload_time > 0:
             return
         if self.direction == Direction.Direction.up:
-            Bullet.Bullet(self.rect.x + 20, self.rect.y - 21, self.direction)
+            Bullet.Bullet(self.rect.x + 20, self.rect.y - 21, self.direction, True)
         if self.direction == Direction.Direction.right:
-            Bullet.Bullet(self.rect.x + 51, self.rect.y + 20, self.direction)
+            Bullet.Bullet(self.rect.x + 51, self.rect.y + 20, self.direction, True)
         if self.direction == Direction.Direction.down:
-            Bullet.Bullet(self.rect.x + 20, self.rect.y + 51, self.direction)
+            Bullet.Bullet(self.rect.x + 20, self.rect.y + 51, self.direction, True)
         if self.direction == Direction.Direction.left:
-            Bullet.Bullet(self.rect.x - 21, self.rect.y + 20, self.direction)
+            Bullet.Bullet(self.rect.x - 21, self.rect.y + 20, self.direction, True)
         self.reload_time = GameSettings.GameSettings.fps * 2
+
+    def collider_with_bullet(self, bullet):
+        if bullet.is_bullet_friendly:
+            return
