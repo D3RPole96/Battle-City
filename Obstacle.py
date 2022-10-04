@@ -51,11 +51,11 @@ class Brick(pygame.sprite.Sprite):
 
     def collider_with_bullet(self, bullet):
         if bullet.direction == Direction.Direction.up or bullet.direction == Direction.Direction.down:
-            bullet_rect = [bullet.rect.x - 2 * bullet.level, bullet.rect.y,
-                           bullet.rect.x + bullet.rect.width + 2 * bullet.level, bullet.rect.y + bullet.rect.height]
+            bullet_rect = [bullet.rect.x - 6 * bullet.level, bullet.rect.y,
+                           bullet.rect.x + bullet.rect.width + 6 * bullet.level, bullet.rect.y + bullet.rect.height]
         else:
-            bullet_rect = [bullet.rect.x, bullet.rect.y - 2 * bullet.level,
-                           bullet.rect.x + bullet.rect.width, bullet.rect.y + bullet.rect.height + 2 * bullet.level]
+            bullet_rect = [bullet.rect.x, bullet.rect.y - 6 * bullet.level,
+                           bullet.rect.x + bullet.rect.width, bullet.rect.y + bullet.rect.height + 6 * bullet.level]
 
         self.top_left_brick_rect = [self.rect.x, self.rect.y,
                                     self.rect.x + self.rect.width / 2, self.rect.y + self.rect.height / 2]

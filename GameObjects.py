@@ -42,8 +42,11 @@ class GameObjects:
         current_bullet = None
         for bullet in self.bullets:
             for static_object in self.static_objects:
-                if static_object.rect.colliderect(bullet.rect):
-                    did_bullet_hit = static_object.collider_with_bullet(bullet)
+                if static_object.rect.colliderect(bullet.rect) or did_bullet_hit:
+                    did_bullet_hit = static_object.collider_with_bullet(bullet) or did_bullet_hit
+            if did_bullet_hit:
+                for static_object in self.static_objects:
+                    static_object.collider_with_bullet(bullet)
             if did_bullet_hit:
                 bullet.destroy_bullet()
             did_bullet_hit = False
