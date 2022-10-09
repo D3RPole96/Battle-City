@@ -62,7 +62,10 @@ class Game:
                         running = False
 
             self.screen.blit(self.surface, self.surface_box)
-            self.game_objects.sprite_group.draw(self.screen)
+            self.game_objects.back_sprite_group.draw(self.screen)
+            self.game_objects.middle_sprite_group.draw(self.screen)
+            self.game_objects.front_sprite_group.draw(self.screen)
+            self.game_objects.interface_sprite_group.draw(self.screen)
             pygame.display.flip()
             self.clock.tick(self.fps)
             self.player.update()
@@ -75,4 +78,4 @@ class Game:
 
 pygame.init()
 
-game = Game('1')
+game = Game('2')

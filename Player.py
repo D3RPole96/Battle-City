@@ -19,6 +19,7 @@ class Player(pygame.sprite.Sprite):
         self.previous_x, self.previous_y = 0, 0
         self.direction = Direction.Direction.up
         self.reload_time = 0
+        self.bullet_level = 2
 
         self.collision_type = 1
 
@@ -68,6 +69,7 @@ class Player(pygame.sprite.Sprite):
             self.direction = Direction.Direction.up
 
         self.image = pygame.transform.scale(self.images[self.direction.value], (50, 50))
+        self.image.set_colorkey((0, 0, 0))
 
     def undo_move(self):
         self.rect.x, self.rect.y = self.previous_x, self.previous_y
@@ -76,13 +78,13 @@ class Player(pygame.sprite.Sprite):
         if self.reload_time > 0:
             return
         if self.direction == Direction.Direction.up:
-            Bullet.Bullet(self.rect.x + 20, self.rect.y - 21, self.direction, True, 2)
+            Bullet.Bullet(self.rect.x + 20, self.rect.y - 21, self.direction, True, self.bullet_level)
         if self.direction == Direction.Direction.right:
-            Bullet.Bullet(self.rect.x + 51, self.rect.y + 20, self.direction, True, 2)
+            Bullet.Bullet(self.rect.x + 51, self.rect.y + 20, self.direction, True, self.bullet_level)
         if self.direction == Direction.Direction.down:
-            Bullet.Bullet(self.rect.x + 20, self.rect.y + 51, self.direction, True, 2)
+            Bullet.Bullet(self.rect.x + 20, self.rect.y + 51, self.direction, True, self.bullet_level)
         if self.direction == Direction.Direction.left:
-            Bullet.Bullet(self.rect.x - 21, self.rect.y + 20, self.direction, True, 2)
+            Bullet.Bullet(self.rect.x - 21, self.rect.y + 20, self.direction, True, self.bullet_level)
         self.reload_time = GameSettings.change_for_fps(10)
 
     def collider_with_bullet(self, bullet):

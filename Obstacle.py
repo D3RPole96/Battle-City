@@ -21,7 +21,7 @@ def is_rectangles_overlap(rect1, rect2):
     width = right - left
     height = bottom - top
 
-    return not(width < 0 or height < 0)
+    return not (width < 0 or height < 0)
 
 
 class Brick(pygame.sprite.Sprite):
@@ -34,11 +34,12 @@ class Brick(pygame.sprite.Sprite):
         self.collision_type = 1
 
         for i in range(1, 16):
-            img = pygame.image.load(os.path.join('sprites/Bricks', f'Brick{i}.png')).convert()
+            img = pygame.image.load(os.path.join('sprites/Obstacles/Bricks', f'Brick{i}.png')).convert()
             self.images.append(img)
         self.size = self.images[14].get_size()
         self.image = pygame.transform.scale(self.images[14], (30, 30))
         self.rect = self.image.get_rect()
+        self.image.set_colorkey((0, 0, 0))
 
     def update_sprite(self):
         str = f"{self.obstacle_state[0]}{self.obstacle_state[1]}{self.obstacle_state[2]}{self.obstacle_state[3]}"
@@ -98,3 +99,92 @@ class Brick(pygame.sprite.Sprite):
     def destroy_brick(self):
         GameObjects.GameObjects.instance.static_objects.remove(self)
         self.kill()
+
+
+class Concrete(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.images = []
+
+        self.collision_type = 1
+
+        self.block_health = 2
+
+        image = pygame.image.load(os.path.join('sprites/Obstacles/Concretes', f'Concrete.png')).convert()
+        self.size = image.get_size()
+        self.image = pygame.transform.scale(image, (30, 30))
+        self.rect = self.image.get_rect()
+
+        self.image.set_colorkey((0, 0, 0))
+
+    def collider_with_bullet(self, bullet):
+        bullet_rect = [bullet.rect.x, bullet.rect.y,
+                       bullet.rect.x + bullet.rect.width, bullet.rect.y + bullet.rect.height]
+        concrete_rect = [self.rect.x, self.rect.y,
+                         self.rect.x + self.rect.width, self.rect.y + self.rect.height]
+        if is_rectangles_overlap(concrete_rect, bullet_rect):
+            if bullet.level == 4:
+                self.block_health -= 1
+                if self.block_health == 0:
+                    self.destroy_concrete()
+            return True
+
+        return False
+
+    def destroy_concrete(self):
+        GameObjects.GameObjects.instance.static_objects.remove(self)
+        self.kill()
+
+
+class Water(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.images = []
+
+        self.collision_type = 1
+
+        image = pygame.image.load(os.path.join('sprites/Obstacles', f'Water.png')).convert()
+        self.size = image.get_size()
+        self.image = pygame.transform.scale(image, (30, 30))
+        self.rect = self.image.get_rect()
+
+        self.image.set_colorkey((0, 0, 0))
+
+    def collider_with_bullet(self, bullet):
+        return False
+
+
+class Trees(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.images = []
+
+        self.collision_type = 0
+
+        image = pygame.image.load(os.path.join('sprites/Obstacles', f'Trees.png')).convert()
+        self.size = image.get_size()
+        self.image = pygame.transform.scale(image, (30, 30))
+        self.rect = self.image.get_rect()
+
+        self.image.set_colorkey((0, 0, 0))
+
+    def collider_with_bullet(self, bullet):
+        return False
+
+
+class Ice(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.images = []
+
+        self.collision_type = 0
+
+        image = pygame.image.load(os.path.join('sprites/Obstacles', f'Ice.png')).convert()
+        self.size = image.get_size()
+        self.image = pygame.transform.scale(image, (30, 30))
+        self.rect = self.image.get_rect()
+
+        self.image.set_colorkey((0, 0, 0))
+
+    def collider_with_bullet(self, bullet):
+        return False

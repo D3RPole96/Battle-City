@@ -5,7 +5,10 @@ class GameObjects:
     instance = None
 
     def __init__(self):
-        self.sprite_group = pygame.sprite.Group()
+        self.interface_sprite_group = pygame.sprite.Group()
+        self.front_sprite_group = pygame.sprite.Group()
+        self.middle_sprite_group = pygame.sprite.Group()
+        self.back_sprite_group = pygame.sprite.Group()
 
         self.dynamic_objects = []
         self.static_objects = []
@@ -14,15 +17,22 @@ class GameObjects:
 
     def set_player(self, player):
         self.dynamic_objects.append(player)
-        self.sprite_group.add(player)
+        self.middle_sprite_group.add(player)
         self.player = player
 
-    def add_static_object(self, game_object):
-        self.sprite_group.add(game_object)
+    def add_static_object(self, game_object, layer='middle'):
+        if layer == 'interface':
+            self.interface_sprite_group.add(game_object)
+        if layer == 'front':
+            self.front_sprite_group.add(game_object)
+        if layer == 'middle':
+            self.middle_sprite_group.add(game_object)
+        if layer == 'back':
+            self.back_sprite_group.add(game_object)
         self.static_objects.append(game_object)
 
     def add_bullet(self, bullet):
-        self.sprite_group.add(bullet)
+        self.middle_sprite_group.add(bullet)
         self.bullets.append(bullet)
 
     def get_all_objects(self):
@@ -39,14 +49,16 @@ class GameObjects:
                     dynamic_object.collider_with_bullet(game_object)
 
         did_bullet_hit = False
-        current_bullet = None
         for bullet in self.bullets:
+            hit_object = []
             for static_object in self.static_objects:
-                if static_object.rect.colliderect(bullet.rect) or did_bullet_hit:
+                if static_object.rect.colliderect(bullet.rect):
                     did_bullet_hit = static_object.collider_with_bullet(bullet) or did_bullet_hit
+                    hit_object.append(static_object)
             if did_bullet_hit:
                 for static_object in self.static_objects:
-                    static_object.collider_with_bullet(bullet)
+                    if static_object not in hit_object:
+                        static_object.collider_with_bullet(bullet)
             if did_bullet_hit:
                 bullet.destroy_bullet()
             did_bullet_hit = False
