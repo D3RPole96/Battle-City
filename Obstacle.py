@@ -49,6 +49,7 @@ class Brick(pygame.sprite.Sprite):
         else:
             self.image = pygame.transform.scale(self.images[int(str, 2) - 1],
                                                 (self.image.get_width(), self.image.get_width()))
+            self.image.set_colorkey((0, 0, 0))
 
     def collider_with_bullet(self, bullet):
         if bullet.direction == Direction.Direction.up or bullet.direction == Direction.Direction.down:
@@ -188,3 +189,13 @@ class Ice(pygame.sprite.Sprite):
 
     def collider_with_bullet(self, bullet):
         return False
+
+    def collider_with_player(self):
+        player = GameObjects.GameObjects.instance.player
+
+        player_rect = [player.rect.x, player.rect.y,
+                       player.rect.x + player.rect.width, player.rect.y + player.rect.height]
+        ice_rect = [self.rect.x, self.rect.y,
+                    self.rect.x + self.rect.width, self.rect.y + self.rect.height]
+
+        return is_rectangles_overlap(player_rect, ice_rect)

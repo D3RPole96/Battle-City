@@ -16,10 +16,15 @@ class Player(pygame.sprite.Sprite):
         self.move_x = 0
         self.move_y = 0
         self.frame = 0
-        self.previous_x, self.previous_y = 0, 0
+        self.previous_x, self.previous_y, self.previous_move_x, self.previous_move_y = 0, 0, 0, 0
         self.direction = Direction.Direction.up
         self.reload_time = 0
         self.bullet_level = 2
+
+        self.sliding_time = GameSettings.change_for_fps(20)
+        self.sliding_time_remaining = 0
+        self.did_slide = False
+        self.slide_x, self.slide_y = 0, 0
 
         self.collision_type = 1
 
@@ -40,6 +45,21 @@ class Player(pygame.sprite.Sprite):
         self.move_y = y
 
     def update(self):
+        if self.sliding_time_remaining == 0 \
+                and GameObjects.GameObjects.instance.is_player_on_ice()\
+                and self.move_x == self.move_y == 0\
+                and (self.previous_move_x != 0 or self.previous_move_y != 0)\
+                and not self.did_slide:
+            self.sliding_time_remaining = self.sliding_time
+            self.did_slide = True
+            self.slide_x = self.previous_move_x
+            self.slide_y = self.previous_move_y
+
+        if self.move_x != 0 or self.move_y != 0 or not GameObjects.GameObjects.instance.is_player_on_ice():
+            self.sliding_time_remaining = 0
+            self.did_slide = False
+
+
         self.previous_x, self.previous_y = self.rect.x, self.rect.y
         self.move_player()
 
@@ -52,9 +72,18 @@ class Player(pygame.sprite.Sprite):
         self.reload_time = max(0, self.reload_time)
 
     def move_player(self):
+        if self.sliding_time_remaining != 0:
+            self.rect.x += self.slide_x
+            self.rect.y += self.slide_y
+            self.sliding_time_remaining -= 1
+            return
+
         self.rect.x += self.move_x
+        self.previous_move_x = self.move_x
+        self.previous_move_y = 0
         if self.move_x == 0:
             self.rect.y += self.move_y
+            self.previous_move_y = self.move_y
 
         self.set_direction()
 

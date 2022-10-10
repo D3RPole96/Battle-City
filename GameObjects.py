@@ -1,5 +1,7 @@
 import pygame
 
+import Obstacle
+
 
 class GameObjects:
     instance = None
@@ -62,6 +64,14 @@ class GameObjects:
             if did_bullet_hit:
                 bullet.destroy_bullet()
             did_bullet_hit = False
+
+    def is_player_on_ice(self):
+        for ice_object in list(filter(lambda static_object:
+                                      isinstance(static_object, Obstacle.Ice), self.static_objects)):
+            if ice_object.collider_with_player():
+                return True
+
+        return False
 
     def move_bullets(self):
         for bullet in self.bullets:
