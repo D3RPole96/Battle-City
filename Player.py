@@ -19,7 +19,7 @@ class Player(pygame.sprite.Sprite):
         self.previous_x, self.previous_y, self.previous_move_x, self.previous_move_y = 0, 0, 0, 0
         self.direction = Direction.Direction.up
         self.reload_time = 0
-        self.bullet_level = 2
+        self.bullet_level = 4
 
         self.sliding_time = GameSettings.change_for_fps(20)
         self.sliding_time_remaining = 0
@@ -46,9 +46,9 @@ class Player(pygame.sprite.Sprite):
 
     def update(self):
         if self.sliding_time_remaining == 0 \
-                and GameObjects.GameObjects.instance.is_player_on_ice()\
-                and self.move_x == self.move_y == 0\
-                and (self.previous_move_x != 0 or self.previous_move_y != 0)\
+                and GameObjects.GameObjects.instance.is_player_on_ice() \
+                and self.move_x == self.move_y == 0 \
+                and (self.previous_move_x != 0 or self.previous_move_y != 0) \
                 and not self.did_slide:
             self.sliding_time_remaining = self.sliding_time
             self.did_slide = True

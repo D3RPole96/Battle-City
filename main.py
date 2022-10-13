@@ -78,4 +78,4 @@ class Game:
 
 pygame.init()
 
-game = Game('2')
+game = Game('test')
