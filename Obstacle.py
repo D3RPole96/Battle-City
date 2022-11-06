@@ -25,7 +25,7 @@ def is_rectangles_overlap(rect1, rect2):
 
 
 class Brick(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, cell, subsell_index):
         pygame.sprite.Sprite.__init__(self)
         self.images = []
 
@@ -41,6 +41,9 @@ class Brick(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.image.set_colorkey((0, 0, 0))
 
+        self.cell = cell
+        self.subsell_index = subsell_index
+
     def update_sprite(self):
         str = f"{self.obstacle_state[0]}{self.obstacle_state[1]}{self.obstacle_state[2]}{self.obstacle_state[3]}"
 
@@ -53,11 +56,11 @@ class Brick(pygame.sprite.Sprite):
 
     def collider_with_bullet(self, bullet):
         if bullet.direction == Direction.Direction.up or bullet.direction == Direction.Direction.down:
-            bullet_rect = [bullet.rect.x - 6 * bullet.level, bullet.rect.y,
-                           bullet.rect.x + bullet.rect.width + 6 * bullet.level, bullet.rect.y + bullet.rect.height]
+            bullet_rect = [bullet.rect.x - 8 * bullet.level, bullet.rect.y,
+                           bullet.rect.x + bullet.rect.width + 8 * bullet.level, bullet.rect.y + bullet.rect.height]
         else:
-            bullet_rect = [bullet.rect.x, bullet.rect.y - 6 * bullet.level,
-                           bullet.rect.x + bullet.rect.width, bullet.rect.y + bullet.rect.height + 6 * bullet.level]
+            bullet_rect = [bullet.rect.x, bullet.rect.y - 8 * bullet.level,
+                           bullet.rect.x + bullet.rect.width, bullet.rect.y + bullet.rect.height + 8 * bullet.level]
 
         self.top_left_brick_rect = [self.rect.x, self.rect.y,
                                     self.rect.x + self.rect.width / 2, self.rect.y + self.rect.height / 2]
@@ -98,12 +101,13 @@ class Brick(pygame.sprite.Sprite):
         return did_bullet_hit
 
     def destroy_brick(self):
+        self.cell.required_bullet_level[self.subsell_index] = 0
         GameObjects.GameObjects.instance.static_objects.remove(self)
         self.kill()
 
 
 class Concrete(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, cell, subsell_index):
         pygame.sprite.Sprite.__init__(self)
         self.images = []
 
@@ -117,6 +121,9 @@ class Concrete(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
         self.image.set_colorkey((0, 0, 0))
+
+        self.cell = cell
+        self.subsell_index = subsell_index
 
     def collider_with_bullet(self, bullet):
         bullet_rect = [bullet.rect.x, bullet.rect.y,
@@ -133,12 +140,13 @@ class Concrete(pygame.sprite.Sprite):
         return False
 
     def destroy_concrete(self):
+        self.cell.required_bullet_level[self.subsell_index] = 0
         GameObjects.GameObjects.instance.static_objects.remove(self)
         self.kill()
 
 
 class Water(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, cell, subsell_index):
         pygame.sprite.Sprite.__init__(self)
         self.images = []
 
@@ -151,12 +159,15 @@ class Water(pygame.sprite.Sprite):
 
         self.image.set_colorkey((0, 0, 0))
 
+        self.cell = cell
+        self.subsell_index = subsell_index
+
     def collider_with_bullet(self, bullet):
         return False
 
 
 class Trees(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, cell, subsell_index):
         pygame.sprite.Sprite.__init__(self)
         self.images = []
 
@@ -169,12 +180,15 @@ class Trees(pygame.sprite.Sprite):
 
         self.image.set_colorkey((0, 0, 0))
 
+        self.cell = cell
+        self.subsell_index = subsell_index
+
     def collider_with_bullet(self, bullet):
         return False
 
 
 class Ice(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, cell, subsell_index):
         pygame.sprite.Sprite.__init__(self)
         self.images = []
 
@@ -186,6 +200,9 @@ class Ice(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
         self.image.set_colorkey((0, 0, 0))
+
+        self.cell = cell
+        self.subsell_index = subsell_index
 
     def collider_with_bullet(self, bullet):
         return False

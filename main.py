@@ -1,7 +1,10 @@
 from collections import defaultdict
 
 import pygame
+
+import Direction
 import Player
+import Tank
 import Generator
 import GameObjects
 import GameSettings
@@ -26,7 +29,6 @@ class Game:
         self.player = Player.Player()
         self.player.rect.x = 0
         self.player.rect.y = 0
-        self.player_speed = 2 * (60 / self.fps)
 
         self.start_cycle()
 
@@ -39,13 +41,13 @@ class Game:
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_UP or event.key == ord('w'):
-                        self.player.control(self.player.move_x, -self.player_speed)
+                        self.player.control(self.player.move_x, -self.player.tank_speed)
                     if event.key == pygame.K_DOWN or event.key == ord('s'):
-                        self.player.control(self.player.move_x, self.player_speed)
+                        self.player.control(self.player.move_x, self.player.tank_speed)
                     if event.key == pygame.K_LEFT or event.key == ord('a'):
-                        self.player.control(-self.player_speed, self.player.move_y)
+                        self.player.control(-self.player.tank_speed, self.player.move_y)
                     if event.key == pygame.K_RIGHT or event.key == ord('d'):
-                        self.player.control(self.player_speed, self.player.move_y)
+                        self.player.control(self.player.tank_speed, self.player.move_y)
                     if event.key == pygame.K_SPACE:
                         self.player.shoot()
 

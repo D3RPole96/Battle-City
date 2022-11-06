@@ -1,5 +1,6 @@
 import pygame
 
+import Cell
 import Obstacle
 
 
@@ -12,10 +13,34 @@ class GameObjects:
         self.middle_sprite_group = pygame.sprite.Group()
         self.back_sprite_group = pygame.sprite.Group()
 
+        self.cells = self.init_cells_list()
+
         self.dynamic_objects = []
         self.static_objects = []
         self.enemies = []
         self.bullets = []
+
+    def init_cells_list(self):
+        cells = []
+
+        for i in range(13):
+            line = []
+            for j in range(13):
+                line.append(Cell.Cell())
+            cells.append(line)
+
+        for i in range(13):
+            for j in range(13):
+                if i != 0:
+                    cells[i][j].top_cell = cells[i - 1][j]
+                if j != 12:
+                    cells[i][j].right_cell = cells[i][j + 1]
+                if i != 12:
+                    cells[i][j].bottom_cell = cells[i + 1][j]
+                if j != 0:
+                    cells[i][j].left_cell = cells[i][j - 1]
+
+        return cells
 
     def set_player(self, player):
         self.dynamic_objects.append(player)

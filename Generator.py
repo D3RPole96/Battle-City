@@ -21,12 +21,24 @@ class Generator:
             for quarter_index in range(len(quarter_blocks)):
                 if quarter_blocks[quarter_index] == '.':
                     continue
-                block = self.obstacles_dictionary[quarter_blocks[quarter_index]]()
+
+                cell = GameObjects.GameObjects.instance.cells[line_index // 2][quarter_index // 2]
+                subsell_index = line_index % 2 * 2 + quarter_index % 2
+
+                block = self.obstacles_dictionary[quarter_blocks[quarter_index]](cell, subsell_index)
                 block.rect.x = 30 * quarter_index
                 block.rect.y = 30 * line_index
+
+                current_obstacle = quarter_blocks[quarter_index]
+
                 layer = 'middle'
-                if quarter_blocks[quarter_index] in 'WI':
+                if current_obstacle in 'WI':
                     layer = 'back'
-                if quarter_blocks[quarter_index] == 'T':
+                if current_obstacle == 'T':
                     layer = 'front'
                 GameObjects.GameObjects.instance.add_static_object(block, layer)
+
+                cell.required_bullet_level[subsell_index] = \
+                    2 if current_obstacle == 'B' \
+                    else (4 if current_obstacle == 'C'
+                          else (255 if current_obstacle == 'W' else 0))
