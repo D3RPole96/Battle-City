@@ -22,5 +22,5 @@
 . . B B . . B B . . B B . . B B . . B B . . B B . .
 . . B B . . B B . . B B . . B B . . B B . . B B . .
 . . B B . . B B . . B B . . B B . . B B . . B B . .
-. . . . . . B B . . . . . . B B . . . . . . B B . .
+. . . . . . B B . . . . . . B B . . . . . . B B E .
 . . . . . . B B . . . . . . B B . . . . . . B B . .

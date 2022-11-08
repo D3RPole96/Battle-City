@@ -9,7 +9,7 @@ import GameObjects
 
 
 class Tank(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, bullet_level, armor_level, speed, is_tank_player):
         pygame.sprite.Sprite.__init__(self)
         self.images = []
 
@@ -20,9 +20,10 @@ class Tank(pygame.sprite.Sprite):
         self.direction = Direction.Direction.down
         self.reload_time = 0
 
-        self.is_tank_player = True
-        self.bullet_level = 0
-        self.armor_level = 0
+        self.bullet_level = bullet_level
+        self.armor_level = armor_level
+        self.tank_speed = GameSettings.change_for_fps(speed)
+        self.is_tank_player = is_tank_player
 
         self.sliding_time = GameSettings.change_for_fps(20)
         self.sliding_time_remaining = 0
@@ -35,17 +36,36 @@ class Tank(pygame.sprite.Sprite):
             img = pygame.image.load(os.path.join('sprites/Tanks', f'green-tank-{i.name}.png')).convert()
             self.images.append(img)
 
+        tank_side_size = GameSettings.get_tank_side_size()
         self.size = self.images[0].get_size()
-        self.image = pygame.transform.scale(self.images[0], (GameSettings.change_for_screen_width(50),
-                                                             GameSettings.change_for_screen_height(50)))
+        self.image = pygame.transform.scale(self.images[0], (GameSettings.change_for_screen_width(tank_side_size),
+                                                             GameSettings.change_for_screen_height(tank_side_size)))
         self.rect = self.image.get_rect()
         self.image.set_colorkey((0, 0, 0))
 
-        GameObjects.GameObjects.instance.set_player(self)
+        GameObjects.GameObjects.instance.add_tank(self)
 
     def control(self, x, y):
         self.move_x = x
         self.move_y = y
+
+    def set_positive_move_x(self):
+        self.move_x = self.tank_speed
+
+    def set_negative_move_x(self):
+        self.move_x = -self.tank_speed
+
+    def set_positive_move_y(self):
+        self.move_y = self.tank_speed
+
+    def set_negative_move_y(self):
+        self.move_y = -self.tank_speed
+
+    def unset_move_x(self):
+        self.move_x = 0
+
+    def unset_move_y(self):
+        self.move_y = 0
 
     def update(self):
         if self.sliding_time_remaining == 0 \
@@ -120,5 +140,12 @@ class Tank(pygame.sprite.Sprite):
         self.reload_time = GameSettings.change_for_fps(10)
 
     def collider_with_bullet(self, bullet):
-        if bullet.is_bullet_friendly:
-            return
+        if (bullet.is_bullet_friendly and not self.is_tank_player) \
+                or (not bullet.is_bullet_friendly and self.is_tank_player):
+            GameObjects.GameObjects.instance.dynamic_objects.remove(self)
+            if not self.is_tank_player:
+                GameObjects.GameObjects.instance.enemies.remove(self)
+            else:
+                GameObjects.GameObjects.instance.player = None
+            bullet.destroy_bullet()
+            self.kill()

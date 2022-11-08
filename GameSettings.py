@@ -9,6 +9,12 @@ def change_for_screen_width(number):
 def change_for_screen_height(number):
     return number * (780 / GameSettings.screen_height)
 
+def get_cell_side_size():
+    return 60
+
+def get_tank_side_size():
+    return 50
+
 
 class GameSettings:
     screen_width = 780

@@ -209,6 +209,8 @@ class Ice(pygame.sprite.Sprite):
 
     def collider_with_player(self):
         player = GameObjects.GameObjects.instance.player
+        if player is None:
+            return False
 
         player_rect = [player.rect.x, player.rect.y,
                        player.rect.x + player.rect.width, player.rect.y + player.rect.height]

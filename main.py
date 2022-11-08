@@ -41,25 +41,23 @@ class Game:
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_UP or event.key == ord('w'):
-                        self.player.control(self.player.move_x, -self.player.tank_speed)
+                        self.player.set_negative_move_y()
                     if event.key == pygame.K_DOWN or event.key == ord('s'):
-                        self.player.control(self.player.move_x, self.player.tank_speed)
+                        self.player.set_positive_move_y()
                     if event.key == pygame.K_LEFT or event.key == ord('a'):
-                        self.player.control(-self.player.tank_speed, self.player.move_y)
+                        self.player.set_negative_move_x()
                     if event.key == pygame.K_RIGHT or event.key == ord('d'):
-                        self.player.control(self.player.tank_speed, self.player.move_y)
+                        self.player.set_positive_move_x()
                     if event.key == pygame.K_SPACE:
                         self.player.shoot()
 
                 if event.type == pygame.KEYUP:
-                    if event.key == pygame.K_UP or event.key == ord('w'):
-                        self.player.control(self.player.move_x, 0)
-                    if event.key == pygame.K_DOWN or event.key == ord('s'):
-                        self.player.control(self.player.move_x, 0)
-                    if event.key == pygame.K_LEFT or event.key == ord('a'):
-                        self.player.control(0, self.player.move_y)
-                    if event.key == pygame.K_RIGHT or event.key == ord('d'):
-                        self.player.control(0, self.player.move_y)
+                    if event.key == pygame.K_UP or event.key == ord('w') \
+                            or event.key == pygame.K_DOWN or event.key == ord('s'):
+                        self.player.unset_move_y()
+                    if event.key == pygame.K_LEFT or event.key == ord('a') \
+                            or event.key == pygame.K_RIGHT or event.key == ord('d'):
+                        self.player.unset_move_x()
                     if event.key == ord('q'):
                         running = False
 
@@ -72,7 +70,9 @@ class Game:
             self.clock.tick(self.fps)
             self.player.update()
 
-            self.game_objects.check_for_collision()
+            self.game_objects.handle_enemies()
+            self.game_objects.check_dynamic_objects_for_collision()
+            self.game_objects.check_bullets_for_collision()
             self.game_objects.move_bullets()
 
     pygame.quit()

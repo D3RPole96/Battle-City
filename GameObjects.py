@@ -2,6 +2,7 @@ import pygame
 
 import Cell
 import Obstacle
+import GameSettings
 
 
 class GameObjects:
@@ -26,7 +27,8 @@ class GameObjects:
         for i in range(13):
             line = []
             for j in range(13):
-                line.append(Cell.Cell())
+                cell = Cell.Cell(j * GameSettings.get_cell_side_size(), i * GameSettings.get_cell_side_size())
+                line.append(cell)
             cells.append(line)
 
         for i in range(13):
@@ -42,10 +44,15 @@ class GameObjects:
 
         return cells
 
-    def set_player(self, player):
+    def add_tank(self, player):
         self.dynamic_objects.append(player)
         self.middle_sprite_group.add(player)
         self.player = player
+
+    def handle_enemies(self):
+        for enemy in self.enemies:
+            enemy.handle_enemy()
+            enemy.update()
 
     def add_static_object(self, game_object, layer='middle'):
         if layer == 'interface':
@@ -65,7 +72,7 @@ class GameObjects:
     def get_all_objects(self):
         return self.dynamic_objects + self.static_objects + self.bullets
 
-    def check_for_collision(self):
+    def check_dynamic_objects_for_collision(self):
         for dynamic_object in self.dynamic_objects:
             for game_object in self.get_all_objects():
                 if dynamic_object == game_object:
@@ -75,6 +82,7 @@ class GameObjects:
                 if dynamic_object.rect.colliderect(game_object.rect) and game_object.collision_type == 2:
                     dynamic_object.collider_with_bullet(game_object)
 
+    def check_bullets_for_collision(self):
         did_bullet_hit = False
         for bullet in self.bullets:
             hit_object = []
