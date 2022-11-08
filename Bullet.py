@@ -26,9 +26,9 @@ class Bullet(pygame.sprite.Sprite):
         self.size = image.get_size()
         if self.direction == Direction.Direction.right or self.direction == Direction.Direction.left:
             self.image = pygame.transform.scale(image, (GameSettings.change_for_screen_width(15),
-                                                        GameSettings.change_for_screen_height(10)))
+                                                        GameSettings.change_for_screen_height(14)))
         else:
-            self.image = pygame.transform.scale(image, (GameSettings.change_for_screen_width(10),
+            self.image = pygame.transform.scale(image, (GameSettings.change_for_screen_width(14),
                                                         GameSettings.change_for_screen_height(15)))
 
         self.image.set_colorkey((0, 0, 0))

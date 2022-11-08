@@ -130,13 +130,13 @@ class Tank(pygame.sprite.Sprite):
         if self.reload_time > 0:
             return
         if self.direction == Direction.Direction.up:
-            Bullet.Bullet(self.rect.x + 20, self.rect.y - 11, self.direction, self.is_tank_player, self.bullet_level)
+            Bullet.Bullet(self.rect.x + 18, self.rect.y - 11, self.direction, self.is_tank_player, self.bullet_level)
         if self.direction == Direction.Direction.right:
-            Bullet.Bullet(self.rect.x + 41, self.rect.y + 20, self.direction, self.is_tank_player, self.bullet_level)
+            Bullet.Bullet(self.rect.x + 41, self.rect.y + 18, self.direction, self.is_tank_player, self.bullet_level)
         if self.direction == Direction.Direction.down:
-            Bullet.Bullet(self.rect.x + 20, self.rect.y + 41, self.direction, self.is_tank_player, self.bullet_level)
+            Bullet.Bullet(self.rect.x + 18, self.rect.y + 41, self.direction, self.is_tank_player, self.bullet_level)
         if self.direction == Direction.Direction.left:
-            Bullet.Bullet(self.rect.x - 11, self.rect.y + 20, self.direction, self.is_tank_player, self.bullet_level)
+            Bullet.Bullet(self.rect.x - 11, self.rect.y + 18, self.direction, self.is_tank_player, self.bullet_level)
         self.reload_time = GameSettings.change_for_fps(10)
 
     def collider_with_bullet(self, bullet):

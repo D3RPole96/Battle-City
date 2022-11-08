@@ -14,7 +14,7 @@ class Enemy(Tank.Tank):
 
     def handle_enemy(self):
         if self.target_cell is None:
-            self.target_cell = Strategy.do_stupid_move(self, self.current_cell)
+            self.target_cell = Strategy.chase_player(self, self.current_cell)
             self.target = self.target_cell.get_cell_coordinates_for_tank()
 
         move_x = self.target[0] - self.rect.x

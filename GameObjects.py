@@ -44,6 +44,14 @@ class GameObjects:
 
         return cells
 
+    def get_all_cells_in_list(self):
+        cells = []
+        for line in self.cells:
+            for cell in line:
+                cells.append(cell)
+
+        return cells
+
     def add_tank(self, player):
         self.dynamic_objects.append(player)
         self.middle_sprite_group.add(player)
