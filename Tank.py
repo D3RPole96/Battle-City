@@ -147,5 +147,5 @@ class Tank(pygame.sprite.Sprite):
                 GameObjects.GameObjects.instance.enemies.remove(self)
             else:
                 GameObjects.GameObjects.instance.player = None
-            bullet.destroy_bullet()
             self.kill()
+            bullet.destroy_bullet()

@@ -21,6 +21,6 @@ T T T T T T T T T T T T T T T T T T T T T T T T T T
 . . . . . . . . . . . . . I I I I I I I I . . . . .
 . W W W W W W W W . . . . I I I I I I I I . . . . .
 . W W W W W W W W . . . . I I I I I I I I . . . W W
-. . . . . . . . . . . . . I I I I I I I I . . . W W
-. . . . . . . . . . . . . I I I I I I I I . . . E .
-. B B B B B B B B . . . . . . . . . . . . . . . . .
+. . . . . . . . . . B B B B I I I I I I I . . . W W
+. . . . . . . . . . B A . B I I I I I I I . . . E .
+. B B B B B B B B . B . . B . . . . . . . . . . . .

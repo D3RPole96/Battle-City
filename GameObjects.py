@@ -20,6 +20,8 @@ class GameObjects:
         self.static_objects = []
         self.enemies = []
         self.bullets = []
+        self.player = None
+        self.eagle = None
 
     def init_cells_list(self):
         cells = []
@@ -52,10 +54,15 @@ class GameObjects:
 
         return cells
 
-    def add_tank(self, player):
-        self.dynamic_objects.append(player)
-        self.middle_sprite_group.add(player)
+    def add_tank(self, tank):
+        self.dynamic_objects.append(tank)
+        self.middle_sprite_group.add(tank)
+
+    def set_player(self, player):
         self.player = player
+
+    def set_eagle(self, eagle):
+        self.eagle = eagle
 
     def handle_enemies(self):
         for enemy in self.enemies:
@@ -100,7 +107,7 @@ class GameObjects:
                     hit_object.append(static_object)
             if did_bullet_hit:
                 for static_object in self.static_objects:
-                    if static_object not in hit_object:
+                    if static_object not in hit_object and static_object != self.eagle:
                         static_object.collider_with_bullet(bullet)
             if did_bullet_hit:
                 bullet.destroy_bullet()

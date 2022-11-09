@@ -7,7 +7,8 @@ import GameObjects
 
 class Player(Tank.Tank):
     def __init__(self):
-        super().__init__(2, 2, 2, True)
+        super().__init__(1, 2, 2, True)
+        GameObjects.GameObjects.instance.set_player(self)
 
     def get_nearest_cell(self):
         nearest_cell = None

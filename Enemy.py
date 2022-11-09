@@ -1,3 +1,4 @@
+import GameSettings
 import Tank
 import GameObjects
 import Strategy
@@ -12,9 +13,14 @@ class Enemy(Tank.Tank):
         self.target_cell = None
         self.current_cell = spawn_cell
 
+        self.strategy = Strategy.do_stupid_move
+        self.ticks = 0
+        self.ticks_before_chasing_player = GameSettings.change_for_fps(480)
+        self.ticks_before_moving_to_eagle = GameSettings.change_for_fps(960)
+
     def handle_enemy(self):
         if self.target_cell is None:
-            self.target_cell = Strategy.chase_player(self, self.current_cell)
+            self.target_cell = self.strategy(self, self.current_cell)
             self.target = self.target_cell.get_cell_coordinates_for_tank()
 
         move_x = self.target[0] - self.rect.x
@@ -39,3 +45,10 @@ class Enemy(Tank.Tank):
             self.current_cell = self.target_cell
             self.target_cell = None
             self.target = (None, None)
+
+        self.ticks += 1
+
+        if self.ticks == self.ticks_before_chasing_player:
+            self.strategy = Strategy.chase_player
+        if self.ticks == self.ticks_before_moving_to_eagle:
+            self.strategy = Strategy.move_to_eagle

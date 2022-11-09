@@ -1,4 +1,6 @@
 import os
+
+import Eagle
 import Obstacle
 import GameObjects
 import Enemy
@@ -6,7 +8,7 @@ import Enemy
 
 def get_objects_dictionary():
     objects_dict = {'B': Obstacle.Brick, 'C': Obstacle.Concrete, 'W': Obstacle.Water,
-                    'T': Obstacle.Trees, 'I': Obstacle.Ice, 'E': Enemy.Enemy}
+                    'T': Obstacle.Trees, 'I': Obstacle.Ice, 'E': Enemy.Enemy, 'A': Eagle.Eagle}
 
     return objects_dict
 
@@ -28,8 +30,12 @@ class Generator:
 
                 current_object = quarter_objects[quarter_index]
 
-                if current_object == 'E':
-                    obj = self.objects_dictionary[quarter_objects[quarter_index]](2, 2, 2, cell)
+                if current_object == 'A':
+                    obj = self.objects_dictionary[quarter_objects[quarter_index]]()
+                    obj.rect.x = 30 * quarter_index
+                    obj.rect.y = 30 * line_index
+                elif current_object == 'E':
+                    obj = self.objects_dictionary[quarter_objects[quarter_index]](1, 2, 2, cell)
                     obj.rect.x = 30 * quarter_index + 5
                     obj.rect.y = 30 * line_index + 5
                 else:
