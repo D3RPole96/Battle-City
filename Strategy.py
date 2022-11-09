@@ -1,3 +1,5 @@
+import math
+
 import GameObjects
 from random import choice
 
@@ -30,9 +32,23 @@ def chase_player(tank, current_cell):
         next_cell = path[next_cell]
 
     if next_cell is None:
-        return do_stupid_move(tank, current_cell)
+        return move_to_player_direction(tank, current_cell)
+
     return next_cell
 
+
+def move_to_player_direction(tank, current_cell):
+    player = GameObjects.GameObjects.instance.player
+    angle = math.atan2(-(player.rect.y - tank.rect.y), player.rect.x - tank.rect.x)
+
+    if abs(angle) <= math.pi / 4:
+        return current_cell.right_cell
+    if math.pi / 4 < angle < 3 * math.pi / 4:
+        return current_cell.top_cell
+    if -3 * math.pi / 4 < angle < -math.pi / 4:
+        return current_cell.bottom_cell
+    if abs(angle) >= 3 * math.pi / 4:
+        return current_cell.left_cell
 
 def dijkstra(tank, start_cell, end_cell):
     cells = GameObjects.GameObjects.instance.get_all_cells_in_list()
