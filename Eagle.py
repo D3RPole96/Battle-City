@@ -31,7 +31,11 @@ class Eagle(pygame.sprite.Sprite):
         return nearest_cell
 
     def collider_with_bullet(self, bullet):
-        if not bullet.is_bullet_friendly:
-            self.kill()
+        if True:
+            self.destroy_eagle()
 
-        return not bullet.is_bullet_friendly
+        return True
+
+    def destroy_eagle(self):
+        self.kill()
+        # Game Over screen here

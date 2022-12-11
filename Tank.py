@@ -18,7 +18,8 @@ class Tank(pygame.sprite.Sprite):
         self.frame = 0
         self.previous_x, self.previous_y, self.previous_move_x, self.previous_move_y = 0, 0, 0, 0
         self.direction = Direction.Direction.down
-        self.reload_time = 0
+        self.remaining_reload_time = 0
+        self.reload_time = GameSettings.change_for_fps(30)
 
         self.bullet_level = bullet_level
         self.armor_level = armor_level
@@ -91,8 +92,8 @@ class Tank(pygame.sprite.Sprite):
         self.rect.y = min(780 - self.image.get_size()[1], self.rect.y)
         self.rect.y = max(0, self.rect.y)
 
-        self.reload_time -= 1
-        self.reload_time = max(0, self.reload_time)
+        self.remaining_reload_time -= 1
+        self.remaining_reload_time = max(0, self.remaining_reload_time)
 
     def move_player(self):
         if self.sliding_time_remaining != 0:
@@ -127,7 +128,7 @@ class Tank(pygame.sprite.Sprite):
         self.rect.x, self.rect.y = self.previous_x, self.previous_y
 
     def shoot(self):
-        if self.reload_time > 0:
+        if self.remaining_reload_time > 0:
             return
         if self.direction == Direction.Direction.up:
             Bullet.Bullet(self.rect.x + 18, self.rect.y - 11, self.direction, self.is_tank_player, self.bullet_level)
@@ -137,7 +138,7 @@ class Tank(pygame.sprite.Sprite):
             Bullet.Bullet(self.rect.x + 18, self.rect.y + 41, self.direction, self.is_tank_player, self.bullet_level)
         if self.direction == Direction.Direction.left:
             Bullet.Bullet(self.rect.x - 11, self.rect.y + 18, self.direction, self.is_tank_player, self.bullet_level)
-        self.reload_time = GameSettings.change_for_fps(10)
+        self.remaining_reload_time = self.reload_time
 
     def collider_with_bullet(self, bullet):
         if (bullet.is_bullet_friendly and not self.is_tank_player) \

@@ -13,6 +13,9 @@ class Enemy(Tank.Tank):
         self.target_cell = None
         self.current_cell = spawn_cell
 
+        self.ticks_before_shooting = GameSettings.change_for_fps(5)
+        self.standing_ticks = 0
+
         self.strategy = Strategy.do_stupid_move
         self.ticks = 0
         self.ticks_before_chasing_player = GameSettings.change_for_fps(480)
@@ -38,8 +41,7 @@ class Enemy(Tank.Tank):
         if move_y < 0 and abs(move_x) < abs(move_y):
             self.set_negative_move_y()
 
-        if random.randint(1, 100) == 1:
-            self.shoot()
+        self.handle_shoot()
 
         if abs(move_x) < self.tank_speed and abs(move_y) < self.tank_speed:
             self.current_cell = self.target_cell
@@ -52,3 +54,25 @@ class Enemy(Tank.Tank):
             self.strategy = Strategy.chase_player
         if self.ticks == self.ticks_before_moving_to_eagle:
             self.strategy = Strategy.move_to_eagle
+
+    def handle_shoot(self):
+        if self.strategy == Strategy.do_stupid_move:
+            if random.randint(1, 100) == 1:
+                self.shoot()
+
+        else:
+            target_obj = GameObjects.GameObjects.instance.player if self.strategy == Strategy.chase_player \
+                else GameObjects.GameObjects.instance.eagle
+            if (self.rect.x == self.previous_x and self.rect.y == self.previous_y) \
+                    or self.is_target_on_same_axis(target_obj):
+                self.standing_ticks += 1
+                if self.standing_ticks == self.ticks_before_shooting:
+                    self.shoot()
+                    self.standing_ticks = 0
+            else:
+                self.standing_ticks = 0
+
+    def is_target_on_same_axis(self, obj):
+        obj_nearest_cell = obj.get_nearest_cell()
+
+        return self.current_cell.x == obj_nearest_cell.x or self.current_cell.y == obj_nearest_cell.y
