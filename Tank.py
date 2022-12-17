@@ -19,12 +19,12 @@ class Tank(pygame.sprite.Sprite):
         self.previous_x, self.previous_y, self.previous_move_x, self.previous_move_y = 0, 0, 0, 0
         self.direction = Direction.Direction.down
         self.remaining_reload_time = 0
-        self.reload_time = GameSettings.change_for_fps(30)
 
         self.bullet_level = bullet_level
         self.armor_level = armor_level
         self.tank_speed = GameSettings.change_for_fps(speed)
         self.is_tank_player = is_tank_player
+        self.remaining_armor_level = armor_level
 
         self.sliding_time = GameSettings.change_for_fps(20)
         self.sliding_time_remaining = 0
@@ -32,19 +32,6 @@ class Tank(pygame.sprite.Sprite):
         self.slide_x, self.slide_y = 0, 0
 
         self.collision_type = 1
-
-        for i in Direction.Direction:
-            img = pygame.image.load(os.path.join('sprites/Tanks', f'green-tank-{i.name}.png')).convert()
-            self.images.append(img)
-
-        tank_side_size = GameSettings.get_tank_side_size()
-        self.size = self.images[0].get_size()
-        self.image = pygame.transform.scale(self.images[0], (GameSettings.change_for_screen_width(tank_side_size),
-                                                             GameSettings.change_for_screen_height(tank_side_size)))
-        self.rect = self.image.get_rect()
-        self.image.set_colorkey((0, 0, 0))
-
-        GameObjects.GameObjects.instance.add_tank(self)
 
     def control(self, x, y):
         self.move_x = x
@@ -143,10 +130,14 @@ class Tank(pygame.sprite.Sprite):
     def collider_with_bullet(self, bullet):
         if (bullet.is_bullet_friendly and not self.is_tank_player) \
                 or (not bullet.is_bullet_friendly and self.is_tank_player):
-            GameObjects.GameObjects.instance.dynamic_objects.remove(self)
-            if not self.is_tank_player:
-                GameObjects.GameObjects.instance.enemies.remove(self)
-            else:
-                GameObjects.GameObjects.instance.player = None
-            self.kill()
+            self.remaining_armor_level -= 1
+
+            if self.remaining_armor_level == 0:
+                GameObjects.GameObjects.instance.dynamic_objects.remove(self)
+                if not self.is_tank_player:
+                    GameObjects.GameObjects.instance.enemies.remove(self)
+                else:
+                    GameObjects.GameObjects.instance.player = None
+                self.kill()
+
             bullet.destroy_bullet()

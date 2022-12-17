@@ -3,6 +3,7 @@ import pygame
 import Cell
 import Obstacle
 import GameSettings
+from Spawner import EnemySpawner
 
 
 class GameObjects:
@@ -20,8 +21,21 @@ class GameObjects:
         self.static_objects = []
         self.enemies = []
         self.bullets = []
+        self.enemy_spawners = []
         self.player = None
         self.eagle = None
+        self.ticks = 0
+
+    def handle(self):
+        self.handle_spawners()
+        self.handle_enemies()
+        self.check_dynamic_objects_for_collision()
+        self.check_bullets_for_collision()
+        self.move_bullets()
+        self.ticks += 1
+
+    def set_enemy_spawners(self, enemy_spawners):
+        self.enemy_spawners = enemy_spawners
 
     def init_cells_list(self):
         cells = []
@@ -68,6 +82,10 @@ class GameObjects:
         for enemy in self.enemies:
             enemy.handle_enemy()
             enemy.update()
+
+    def handle_spawners(self):
+        for spawner in self.enemy_spawners:
+            spawner.try_spawn_enemy(self.ticks)
 
     def add_static_object(self, game_object, layer='middle'):
         if layer == 'interface':

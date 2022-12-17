@@ -1,6 +1,7 @@
 from collections import defaultdict
 
 import pygame
+from pygame_menu import Theme
 
 import Direction
 import Player
@@ -8,17 +9,42 @@ import Tank
 import Generator
 import GameObjects
 import GameSettings
+import pygame_menu
+
+
+class Menu:
+    def __init__(self):
+        self.screen_width = GameSettings.GameSettings.screen_width
+        self.screen_height = GameSettings.GameSettings.screen_height
+        self.screen = pygame.display.set_mode([self.screen_width, self.screen_height])
+
+        mytheme = Theme(background_color=(0, 0, 0, 0),  # transparent background
+                        title_background_color=(0, 0, 0, 255),
+                        title_font_shadow=True,
+                        widget_padding=25)
+
+        menu = pygame_menu.Menu('Battle City', self.screen_width, self.screen_height,
+                                theme=mytheme)
+        USER_NAME = menu.add.text_input('Player name: ', default='Player')
+        # menu.add.button('Обучение', start_the_game)
+        menu.add.button('Test level', Game, 'test', self.screen)
+        menu.add.button('Test level 2', Game, 'test2', self.screen)
+        menu.add.button('Level 1', Game, '1', self.screen)
+        menu.add.button('Level 2', Game, '2', self.screen)
+        menu.add.button('Exit', pygame_menu.events.EXIT)
+        pygame.display.set_caption('Battle City')
+        menu.mainloop(self.screen)
 
 
 class Game:
-    def __init__(self, level):
+    def __init__(self, level, screen):
         self.fps = GameSettings.GameSettings.fps
         self.screen_width = GameSettings.GameSettings.screen_width
         self.screen_height = GameSettings.GameSettings.screen_height
 
         self.game_objects = GameObjects.GameObjects.instance = GameObjects.GameObjects()
 
-        self.screen = pygame.display.set_mode([self.screen_width, self.screen_height])
+        self.screen = screen
         self.surface = pygame.Surface((self.screen_width, self.screen_height))
         self.surface.fill((0, 0, 0))
         self.surface_box = self.screen.get_rect()
@@ -70,14 +96,12 @@ class Game:
             self.clock.tick(self.fps)
             self.player.update()
 
-            self.game_objects.handle_enemies()
-            self.game_objects.check_dynamic_objects_for_collision()
-            self.game_objects.check_bullets_for_collision()
-            self.game_objects.move_bullets()
+            self.game_objects.handle()
 
     pygame.quit()
 
 
-pygame.init()
+if __name__ == "__main__":
+    pygame.init()
 
-game = Game('test2')
+    game = Menu()

@@ -2,6 +2,8 @@
 . . B B . . . . . . B B . . . . . . B B . . . . . .
 . . B B . . B B . . B B . . B B . . B B . . B B . .
 . . B B . . B B . . B B . . B B . . B B . . B B . .
+. . B B . . B B 2 . B B . . B B . . B B . . B B . .
+. . B B . . B B . . B B . . B B 1 . B B . . B B . .
 . . B B . . B B . . B B . . B B . . B B . . B B . .
 . . B B . . B B . . B B . . B B . . B B . . B B . .
 . . B B . . B B . . B B . . B B . . B B . . B B . .
@@ -19,8 +21,9 @@
 . . B B . . B B . . B B . . B B . . B B . . B B . .
 . . B B . . B B . . B B . . B B . . B B . . B B . .
 . . B B . . B B . . B B . . B B . . B B . . B B . .
-. . B B . . B B . . B B . . B B . . B B . . B B . .
-. . B B . . B B . . B B . . B B . . B B . . B B . .
-. . B B . . B B . . B B . . B B . . B B . . B B . .
-. . . . . . B B . . . . . . B B . . . . . . B B E .
-. . . . . . B B . . . . . . B B . . . . . . B B . .
+. . B B . . B B . . B B B B B B . . B B . . B B . .
+. . . . . . B B . . . B A . B B . . . . . . B B 0 .
+. . . . . . B B . . . B . . B B . . . . . . B B . .
+0 H 240 S 900
+1 H 480
+2 F 600
