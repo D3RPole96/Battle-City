@@ -14,7 +14,7 @@ import pygame_menu
 
 class Menu:
     def __init__(self):
-        self.screen_width = GameSettings.GameSettings.screen_width
+        self.screen_width = GameSettings.GameSettings.screen_width + GameSettings.GameSettings.info_width
         self.screen_height = GameSettings.GameSettings.screen_height
         self.screen = pygame.display.set_mode([self.screen_width, self.screen_height])
 
@@ -39,7 +39,7 @@ class Menu:
 class Game:
     def __init__(self, level, screen):
         self.fps = GameSettings.GameSettings.fps
-        self.screen_width = GameSettings.GameSettings.screen_width
+        self.screen_width = GameSettings.GameSettings.screen_width + GameSettings.GameSettings.info_width
         self.screen_height = GameSettings.GameSettings.screen_height
 
         self.game_objects = GameObjects.GameObjects.instance = GameObjects.GameObjects()
@@ -88,10 +88,7 @@ class Game:
                         running = False
 
             self.screen.blit(self.surface, self.surface_box)
-            self.game_objects.back_sprite_group.draw(self.screen)
-            self.game_objects.middle_sprite_group.draw(self.screen)
-            self.game_objects.front_sprite_group.draw(self.screen)
-            self.game_objects.interface_sprite_group.draw(self.screen)
+            self.game_objects.draw_sprite_groups(self.screen)
             pygame.display.flip()
             self.clock.tick(self.fps)
             self.player.update()

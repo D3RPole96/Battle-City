@@ -26,6 +26,18 @@ class GameObjects:
         self.eagle = None
         self.ticks = 0
 
+    def draw_sprite_groups(self, screen):
+        self.back_sprite_group.draw(screen)
+        self.middle_sprite_group.draw(screen)
+        self.front_sprite_group.draw(screen)
+
+        pygame.draw.rect(screen, (116, 116, 116), pygame.Rect(GameSettings.GameSettings.screen_width,
+                                                              0,
+                                                              GameSettings.GameSettings.screen_width +
+                                                              GameSettings.GameSettings.info_width,
+                                                              GameSettings.GameSettings.screen_height))
+        self.interface_sprite_group.draw(screen)
+
     def handle(self):
         self.handle_spawners()
         self.handle_enemies()
