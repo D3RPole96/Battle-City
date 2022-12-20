@@ -17,7 +17,8 @@ def get_tank_side_size():
 
 
 class GameSettings:
+    subcell_size = 30
     screen_width = 780
-    info_width = 100
+    info_width = 0
     screen_height = 780
     fps = 60

@@ -1,6 +1,3 @@
-from Cell import Cell
-
-
 class EnemySpawner:
     def __init__(self, x, y):
         self.x = x

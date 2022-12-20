@@ -25,7 +25,7 @@ def is_rectangles_overlap(rect1, rect2):
 
 
 class Brick(pygame.sprite.Sprite):
-    def __init__(self, cell, subsell_index):
+    def __init__(self, cell, subcell_index):
         pygame.sprite.Sprite.__init__(self)
         self.images = []
 
@@ -42,13 +42,14 @@ class Brick(pygame.sprite.Sprite):
         self.image.set_colorkey((0, 0, 0))
 
         self.cell = cell
-        self.subsell_index = subsell_index
+        self.subcell_index = subcell_index
+        self.cell.required_bullet_level[self.subcell_index] = 2
 
     def update_sprite(self):
         str = f"{self.obstacle_state[0]}{self.obstacle_state[1]}{self.obstacle_state[2]}{self.obstacle_state[3]}"
 
         if str == '0000':
-            self.destroy_brick()
+            self.destroy_block()
         else:
             self.image = pygame.transform.scale(self.images[int(str, 2) - 1],
                                                 (self.image.get_width(), self.image.get_width()))
@@ -100,14 +101,14 @@ class Brick(pygame.sprite.Sprite):
 
         return did_bullet_hit
 
-    def destroy_brick(self):
-        self.cell.required_bullet_level[self.subsell_index] = 0
+    def destroy_block(self):
+        self.cell.required_bullet_level[self.subcell_index] = 0
         GameObjects.GameObjects.instance.static_objects.remove(self)
         self.kill()
 
 
 class Concrete(pygame.sprite.Sprite):
-    def __init__(self, cell, subsell_index):
+    def __init__(self, cell, subcell_index):
         pygame.sprite.Sprite.__init__(self)
         self.images = []
 
@@ -123,7 +124,8 @@ class Concrete(pygame.sprite.Sprite):
         self.image.set_colorkey((0, 0, 0))
 
         self.cell = cell
-        self.subsell_index = subsell_index
+        self.subcell_index = subcell_index
+        self.cell.required_bullet_level[self.subcell_index] = 4
 
     def collider_with_bullet(self, bullet):
         bullet_rect = [bullet.rect.x, bullet.rect.y,
@@ -134,19 +136,19 @@ class Concrete(pygame.sprite.Sprite):
             if bullet.level == 4:
                 self.block_health -= 1
                 if self.block_health == 0:
-                    self.destroy_concrete()
+                    self.destroy_block()
             return True
 
         return False
 
-    def destroy_concrete(self):
-        self.cell.required_bullet_level[self.subsell_index] = 0
+    def destroy_block(self):
+        self.cell.required_bullet_level[self.subcell_index] = 0
         GameObjects.GameObjects.instance.static_objects.remove(self)
         self.kill()
 
 
 class Water(pygame.sprite.Sprite):
-    def __init__(self, cell, subsell_index):
+    def __init__(self, cell, subcell_index):
         pygame.sprite.Sprite.__init__(self)
         self.images = []
 
@@ -160,14 +162,15 @@ class Water(pygame.sprite.Sprite):
         self.image.set_colorkey((0, 0, 0))
 
         self.cell = cell
-        self.subsell_index = subsell_index
+        self.subcell_index = subcell_index
+        self.cell.required_bullet_level[self.subcell_index] = 255
 
     def collider_with_bullet(self, bullet):
         return False
 
 
 class Trees(pygame.sprite.Sprite):
-    def __init__(self, cell, subsell_index):
+    def __init__(self, cell, subcell_index):
         pygame.sprite.Sprite.__init__(self)
         self.images = []
 
@@ -181,14 +184,14 @@ class Trees(pygame.sprite.Sprite):
         self.image.set_colorkey((0, 0, 0))
 
         self.cell = cell
-        self.subsell_index = subsell_index
+        self.subcell_index = subcell_index
 
     def collider_with_bullet(self, bullet):
         return False
 
 
 class Ice(pygame.sprite.Sprite):
-    def __init__(self, cell, subsell_index):
+    def __init__(self, cell, subcell_index):
         pygame.sprite.Sprite.__init__(self)
         self.images = []
 
@@ -202,7 +205,7 @@ class Ice(pygame.sprite.Sprite):
         self.image.set_colorkey((0, 0, 0))
 
         self.cell = cell
-        self.subsell_index = subsell_index
+        self.subcell_index = subcell_index
 
     def collider_with_bullet(self, bullet):
         return False

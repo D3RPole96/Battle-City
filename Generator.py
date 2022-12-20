@@ -46,7 +46,6 @@ class Generator:
                     while len(self.enemy_spawners) <= int(current_object):
                         self.enemy_spawners.append(None)
                         self.enemy_spawners_cells.append(None)
-                    # enemy_caller = lambda: self.objects_dictionary[quarter_objects[quarter_index]](cell)
                     self.enemy_spawners[int(current_object)] = EnemySpawner(30 * quarter_index + 5, 30 * line_index + 5)
                     self.enemy_spawners_cells[int(current_object)] = cell
                 else:
@@ -62,11 +61,6 @@ class Generator:
 
                 if not current_object.isdigit():
                     GameObjects.GameObjects.instance.add_static_object(obj, layer)
-
-                cell.required_bullet_level[subsell_index] = \
-                    2 if current_object == 'B' \
-                        else (4 if current_object == 'C'
-                              else (255 if current_object == 'W' else 0))
 
         for line_index in range(26, len(lines)):
             enemy_spawner_index = int(lines[line_index].split(' ')[0])

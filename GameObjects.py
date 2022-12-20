@@ -1,3 +1,5 @@
+import random
+
 import pygame
 
 import Cell
@@ -26,6 +28,10 @@ class GameObjects:
         self.eagle = None
         self.ticks = 0
 
+        self.available_bonuses = []
+        self.pickable_bonuses = []
+        self.bonuses = []
+
     def draw_sprite_groups(self, screen):
         self.back_sprite_group.draw(screen)
         self.middle_sprite_group.draw(screen)
@@ -39,12 +45,27 @@ class GameObjects:
         self.interface_sprite_group.draw(screen)
 
     def handle(self):
+        self.handle_pickable_bonuses()
+        self.handle_bonuses()
         self.handle_spawners()
         self.handle_enemies()
         self.check_dynamic_objects_for_collision()
         self.check_bullets_for_collision()
         self.move_bullets()
         self.ticks += 1
+
+        if self.ticks % GameSettings.change_for_fps(900) == 0:
+            self.spawn_pickable_bonus()
+
+    def spawn_pickable_bonus(self):
+        pickable_bonus = random.choice(self.available_bonuses)()
+        pickable_bonus.rect.x = random.randint(0, GameSettings.GameSettings.screen_width - 60)
+        pickable_bonus.rect.y = random.randint(0, GameSettings.GameSettings.screen_height - 60)
+        pickable_bonus.rect.x = 0
+        pickable_bonus.rect.y = 0
+        self.front_sprite_group.add(pickable_bonus)
+        self.pickable_bonuses.append(pickable_bonus)
+
 
     def set_enemy_spawners(self, enemy_spawners):
         self.enemy_spawners = enemy_spawners
@@ -89,6 +110,30 @@ class GameObjects:
 
     def set_eagle(self, eagle):
         self.eagle = eagle
+
+    def handle_pickable_bonuses(self):
+        picked_bonuses = []
+        for pickable_bonus in self.pickable_bonuses:
+            if self.player.rect.colliderect(pickable_bonus.rect):
+                picked_bonuses.append(pickable_bonus)
+                self.bonuses.append(pickable_bonus.bonus_caller())
+
+            pickable_bonus.remaining_time -= 1
+            if pickable_bonus.remaining_time == 0:
+                picked_bonuses.append(pickable_bonus)
+
+        for picked_bonus in picked_bonuses:
+            self.pickable_bonuses.remove(picked_bonus)
+            picked_bonus.kill()
+
+    def handle_bonuses(self):
+        ended_bonuses = []
+        for bonus in self.bonuses:
+            if bonus.is_bonus_ended():
+                ended_bonuses.append(bonus)
+
+        for ended_bonus in ended_bonuses:
+            self.bonuses.remove(ended_bonus)
 
     def handle_enemies(self):
         for enemy in self.enemies:

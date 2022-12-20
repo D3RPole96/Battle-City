@@ -11,7 +11,7 @@ class Bullet(pygame.sprite.Sprite):
     def __init__(self, x, y, direction, is_bullet_friendly, bullet_level):
         pygame.sprite.Sprite.__init__(self)
 
-        self.bullet_speed = GameSettings.change_for_fps(bullet_level * 5)
+        self.bullet_speed = GameSettings.change_for_fps(bullet_level * 10)
         self.level = bullet_level
 
         self.move_x = 0

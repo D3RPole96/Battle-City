@@ -10,6 +10,9 @@ import Generator
 import GameObjects
 import GameSettings
 import pygame_menu
+import PickableBonuses.PickableShovelBonus
+
+from Bonuses.ShovelBonus import ShovelBonus
 
 
 class Menu:
@@ -29,6 +32,7 @@ class Menu:
         # menu.add.button('Обучение', start_the_game)
         menu.add.button('Test level', Game, 'test', self.screen)
         menu.add.button('Test level 2', Game, 'test2', self.screen)
+        menu.add.button('Test level 3', Game, 'test3', self.screen)
         menu.add.button('Level 1', Game, '1', self.screen)
         menu.add.button('Level 2', Game, '2', self.screen)
         menu.add.button('Exit', pygame_menu.events.EXIT)
@@ -43,6 +47,7 @@ class Game:
         self.screen_height = GameSettings.GameSettings.screen_height
 
         self.game_objects = GameObjects.GameObjects.instance = GameObjects.GameObjects()
+        self.game_objects.available_bonuses = [PickableBonuses.PickableShovelBonus.PickableShovelBonus]
 
         self.screen = screen
         self.surface = pygame.Surface((self.screen_width, self.screen_height))

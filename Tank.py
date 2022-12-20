@@ -19,6 +19,7 @@ class Tank(pygame.sprite.Sprite):
         self.previous_x, self.previous_y, self.previous_move_x, self.previous_move_y = 0, 0, 0, 0
         self.direction = Direction.Direction.down
         self.remaining_reload_time = 0
+        self.reload_time = GameSettings.change_for_fps(5)
 
         self.bullet_level = bullet_level
         self.armor_level = armor_level
