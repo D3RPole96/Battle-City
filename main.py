@@ -11,6 +11,7 @@ import GameObjects
 import GameSettings
 import pygame_menu
 import PickableBonuses.PickableShovelBonus
+from LevelEditor.LevelEditor import LevelEditor
 
 from Bonuses.ShovelBonus import ShovelBonus
 
@@ -35,6 +36,8 @@ class Menu:
         menu.add.button('Test level 3', Game, 'test3', self.screen)
         menu.add.button('Level 1', Game, '1', self.screen)
         menu.add.button('Level 2', Game, '2', self.screen)
+
+        menu.add.button('Level Editor', LevelEditor, self.screen)
         menu.add.button('Exit', pygame_menu.events.EXIT)
         pygame.display.set_caption('Battle City')
         menu.mainloop(self.screen)
