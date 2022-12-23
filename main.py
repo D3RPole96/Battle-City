@@ -11,7 +11,7 @@ import GameObjects
 import GameSettings
 import pygame_menu
 import PickableBonuses.PickableShovelBonus
-from LevelEditor.LevelEditor import LevelEditor
+from Editor.LevelEditor import LevelEditor
 
 from Bonuses.ShovelBonus import ShovelBonus
 
