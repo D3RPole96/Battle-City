@@ -1,5 +1,6 @@
 import GameSettings
 
+
 class Cell:
     def __init__(self, x, y):
         self.required_bullet_level = [0, 0, 0, 0]

@@ -57,7 +57,3 @@ class ShovelBonus:
 
         self.bonus_time_left -= 1
         return False
-
-
-
-

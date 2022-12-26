@@ -1,3 +1,4 @@
+import json
 import os
 
 import Eagle
@@ -21,37 +22,38 @@ def get_objects_dictionary():
 
 class Generator:
     def __init__(self, level):
-        self.path = os.path.join('Levels', f'{level}.txt')
+        with open(f'Levels/{level}.json', 'r') as json_file:
+            json_file = json.load(json_file)
+            world_data = json_file[0]
+            spawners = json_file[1]
+
         self.objects_dictionary = get_objects_dictionary()
         self.enemy_spawners = []
         self.enemy_spawners_cells = []
-        f = open(self.path, "r")
-        lines = f.read().split('\n')
-        for line_index in range(26):
-            quarter_objects = lines[line_index].split(' ')
-            for quarter_index in range(len(quarter_objects)):
-                if quarter_objects[quarter_index] == '.':
+        for y in range(26):
+            for x in range(26):
+                if world_data[y][x] == '.':
                     continue
 
-                cell = GameObjects.GameObjects.instance.cells[line_index // 2][quarter_index // 2]
-                subsell_index = line_index % 2 * 2 + quarter_index % 2
+                cell = GameObjects.GameObjects.instance.cells[y // 2][x // 2]
+                subsell_index = y % 2 * 2 + x % 2
 
-                current_object = quarter_objects[quarter_index]
+                current_object = world_data[y][x]
 
                 if current_object == 'A':
-                    obj = self.objects_dictionary[quarter_objects[quarter_index]]()
-                    obj.rect.x = 30 * quarter_index
-                    obj.rect.y = 30 * line_index
+                    obj = self.objects_dictionary[world_data[y][x]]()
+                    obj.rect.x = 30 * x
+                    obj.rect.y = 30 * y
                 elif current_object.isdigit():
                     while len(self.enemy_spawners) <= int(current_object):
                         self.enemy_spawners.append(None)
                         self.enemy_spawners_cells.append(None)
-                    self.enemy_spawners[int(current_object)] = EnemySpawner(30 * quarter_index + 5, 30 * line_index + 5)
+                    self.enemy_spawners[int(current_object)] = EnemySpawner(30 * x + 5, 30 * y + 5)
                     self.enemy_spawners_cells[int(current_object)] = cell
                 else:
-                    obj = self.objects_dictionary[quarter_objects[quarter_index]](cell, subsell_index)
-                    obj.rect.x = 30 * quarter_index
-                    obj.rect.y = 30 * line_index
+                    obj = self.objects_dictionary[world_data[y][x]](cell, subsell_index)
+                    obj.rect.x = 30 * x
+                    obj.rect.y = 30 * y
 
                 layer = 'middle'
                 if current_object == 'T':
@@ -62,13 +64,13 @@ class Generator:
                 if not current_object.isdigit():
                     GameObjects.GameObjects.instance.add_static_object(obj, layer)
 
-        for line_index in range(26, len(lines)):
-            enemy_spawner_index = int(lines[line_index].split(' ')[0])
-            enemies = lines[line_index].split(' ')[1::2]
-            ticks = lines[line_index].split(' ')[2::2]
-            for i in range(len(enemies)):
-                self.enemy_spawners[enemy_spawner_index].add_enemy(ticks[i],
-                                                                   self.objects_dictionary[enemies[i]],
+        for i in range(len(spawners)):
+            enemy_spawner_index = int(spawners[i].split(' ')[0])
+            enemies = spawners[i].split(' ')[1::2]
+            ticks = spawners[i].split(' ')[2::2]
+            for j in range(len(enemies)):
+                self.enemy_spawners[enemy_spawner_index].add_enemy(ticks[j],
+                                                                   self.objects_dictionary[enemies[j]],
                                                                    self.enemy_spawners_cells[enemy_spawner_index])
 
         GameObjects.GameObjects.instance.set_enemy_spawners(self.enemy_spawners)

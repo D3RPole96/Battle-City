@@ -61,8 +61,8 @@ class GameObjects:
         pickable_bonus = random.choice(self.available_bonuses)()
         pickable_bonus.rect.x = random.randint(0, GameSettings.GameSettings.screen_width - 60)
         pickable_bonus.rect.y = random.randint(0, GameSettings.GameSettings.screen_height - 60)
-        pickable_bonus.rect.x = 0
-        pickable_bonus.rect.y = 0
+        #pickable_bonus.rect.x = 0
+        #pickable_bonus.rect.y = 0
         self.front_sprite_group.add(pickable_bonus)
         self.pickable_bonuses.append(pickable_bonus)
 
